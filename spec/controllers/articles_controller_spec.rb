@@ -48,6 +48,20 @@ RSpec.describe ArticlesController, type: :controller do
       expect(response).to redirect_to assigns(:article)
     end
 
+    it "creates with tags" do
+      post :create, :params => { :article => {
+        :title => "test title",
+        :text => "test text",
+        :tags_attributes => Hash[ "1" => { :name => "tag1" }, "2" => { :name => "tag2" } ]
+        }
+      }
+
+      article = assigns(:article)
+      expect(article.tags.length).to eq(2)
+      expect(article.tags[0].name).to eq("tag1")
+      expect(article.tags[1].name).to eq("tag2")
+    end
+
     it "redirects to new on fail" do
       post :create, :params => { :article => { :title => "test", :text => "test text" } }
       expect(response).to render_template("new")
@@ -57,6 +71,7 @@ RSpec.describe ArticlesController, type: :controller do
   describe "PATCH article" do
     before do
       @article = Article.create(:title => "test title", :text => "test text")
+      @article.tags.create(:id => "id1", :name => "tag1")
     end
 
     it "updates and redirects to @article" do
@@ -67,6 +82,28 @@ RSpec.describe ArticlesController, type: :controller do
     it "redirects to edit on fail" do
       patch :update, :params => { :id => @article.id, :article => { :title => "test", :text => "test text" } }
       expect(response).to render_template("edit")
+    end
+
+    it "adds tag" do
+      patch :update, :params => {
+        :id => @article.id,
+        :article => {
+          :title => "test",
+          :text => "test text",
+          :tags_attributes => Hash["1" => { :id => "id1", :name => "tag1" }, "2" => { :name => "tag2" }]
+        }
+      }
+      article = assigns(:article)
+      expect(article.tags.length).to eq(2)
+      expect(article.tags[0].id).to eq("id1")
+      expect(article.tags[0].name).to eq("tag1")
+      expect(article.tags[1].name).to eq("tag2")
+    end
+
+    it "removes tags" do
+      patch :update, :params => { :id => @article.id, :article => { :title => "test", :text => "test text" } }
+      article = assigns(:article)
+      expect(article.tags).to eq([])
     end
   end
 

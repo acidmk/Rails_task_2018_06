@@ -23,6 +23,22 @@
     <%= form.label :text %><br>
     <%= form.text_area :text %>
   </p>
+
+  <label>Tags</label>
+  <div class="tag-editor">
+    <span>
+      <%= form.fields_for :tags, :include_id => false do |tag_fields| %>
+        <span class="article-tag">
+          <%= tag_fields.object.name %>
+          <span class="article-tag__delete-tag" title="remove this tag"></span>
+          <%= tag_fields.hidden_field :id %>
+          <%= tag_fields.hidden_field :name %>
+        </span>
+      <% end %>
+    </span>
+    <%= text_field_tag 'tag', "", placeholder: "Tags", autocomplete: "off", class: "tag-editor__input" %>
+  </div>
+  <div class="tag-suggestions"></div>
  
   <p>
     <%= form.submit %>

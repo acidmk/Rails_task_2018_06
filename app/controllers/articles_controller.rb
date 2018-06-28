@@ -44,6 +44,9 @@ class ArticlesController < ApplicationController
 
   private
   def article_params
-    params.require(:article).permit(:title, :text)
+    if not params[:article][:tags_attributes]
+      params[:article][:tags_attributes] = []
+    end
+    params.require(:article).permit(:title, :text, :tags_attributes => [ :name ])
   end
 end

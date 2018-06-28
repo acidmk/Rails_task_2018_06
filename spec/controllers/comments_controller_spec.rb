@@ -15,7 +15,7 @@ RSpec.describe CommentsController, type: :controller do
 
   describe "DELETE comment" do
     it "destroys comment and redirects to article" do
-      post :destroy, :params => { :article_id => @article.id, :id => @comment.id }
+      delete :destroy, :params => { :article_id => @article.id, :id => @comment.id }
       expect(assigns(:comment).destroyed?).to be true
       expect(response).to redirect_to article_path(@article)
     end
