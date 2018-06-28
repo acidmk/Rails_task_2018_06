@@ -1,0 +1,6 @@
+production:
+  tags_mail: "acidmk2@gmail.com"
+development:
+  tags_mail: "acidmk2@gmail.com"
+test:
+  tags_mail: "to@example.org"

@@ -19,6 +19,7 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
  
     if @article.save
+      TagsReportJob.perform_later
       redirect_to @article
     else
       render 'new'
@@ -29,6 +30,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
    
     if @article.update(article_params)
+      TagsReportJob.perform_later
       redirect_to @article
     else
       render 'edit'
